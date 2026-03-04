@@ -1,0 +1,23 @@
+{
+  "siteName": "SL Colonies",
+  "tagline": "Flexible Roleplay Systems for Second Life",
+  "description": "SL Colonies is a flexible farming, crafting, trading, and progression system for Second Life world builders and players.",
+  "baseUrl": "https://slcolonies.com",
+  "ogImage": "/images/section-6-1.jpg",
+  "contact": {
+    "forum": "https://forum.slcolonies.com",
+    "website": "https://www.slcolonies.com",
+    "store": "https://www.slcolonies.com/start-your-journey/",
+    "discord": "https://discord.gg/"
+  },
+  "navigation": [
+    { "label": "Home", "href": "/" },
+    { "label": "For Players", "href": "/players/" },
+    { "label": "For World Builders", "href": "/world-builders/" },
+    { "label": "Systems", "href": "/systems/" },
+    { "label": "Community", "href": "/community/" },
+    { "label": "News", "href": "/news/" },
+    { "label": "FAQ", "href": "/faq/" },
+    { "label": "Get Started", "href": "/get-started/" }
+  ]
+}

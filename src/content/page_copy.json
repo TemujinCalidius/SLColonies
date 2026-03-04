@@ -1,0 +1,164 @@
+{
+  "home": {
+    "title": "Flexible RP Systems Built for Players and World Builders",
+    "description": "Build a living world where farming, crafting, trade, and roleplay progression stay connected.",
+    "hero": {
+      "eyebrow": "Second Life Roleplay Infrastructure",
+      "headline": "Build Your Realm. Shape Your Story.",
+      "body": "SL Colonies connects survival, farming, crafting, trade, and progression into one modular system. Players get meaningful loops. World builders get control over pacing, economy, and identity.",
+      "primaryCta": { "label": "Start With SL Colonies", "href": "/get-started/" },
+      "secondaryCta": { "label": "For Sim Owners", "href": "/world-builders/" },
+      "image": "/images/section-6-1.jpg",
+      "imageAlt": "SL Colonies fantasy environment showcase"
+    },
+    "why": [
+      {
+        "title": "One Connected System",
+        "body": "Gathering, production, economy, and roleplay progression are designed to reinforce each other instead of living in disconnected tools."
+      },
+      {
+        "title": "Configurable for Different Realms",
+        "body": "Tune systems for small homestead communities, large medieval regions, or mixed-purpose experiences without rebuilding from scratch."
+      },
+      {
+        "title": "Built for Community Retention",
+        "body": "Long-term loops, social trade, and collaborative projects keep players returning and give land owners better retention levers."
+      }
+    ],
+    "howItWorks": [
+      {
+        "step": "01",
+        "title": "Install Core Modules",
+        "body": "Deploy HUD and world components for your region goals."
+      },
+      {
+        "step": "02",
+        "title": "Configure Your Economy",
+        "body": "Set progression pace, resource pressure, and craft pathways."
+      },
+      {
+        "step": "03",
+        "title": "Run Live Story Arcs",
+        "body": "Use events, recipes, and updates to evolve your world over time."
+      }
+    ],
+    "finalCta": {
+      "title": "Ready to launch your next realm arc?",
+      "body": "Start with player onboarding, then shape systems around your world identity.",
+      "button": { "label": "Open Get Started", "href": "/get-started/" }
+    }
+  },
+  "players": {
+    "title": "For Players",
+    "description": "Progress through meaningful loops across survival, crafting, and community-driven trade.",
+    "hero": {
+      "eyebrow": "For Players",
+      "headline": "Progress That Feels Earned",
+      "body": "From first harvest to advanced crafting chains, SL Colonies gives players clear goals, social trade opportunities, and roleplay depth.",
+      "image": "/images/adventure-img.jpg",
+      "imageAlt": "SL Colonies player journey"
+    },
+    "journey": [
+      {
+        "title": "Set Up Your Character",
+        "body": "Create your avatar and register for the HUD and meter workflow."
+      },
+      {
+        "title": "Gather and Craft",
+        "body": "Collect resources and move through recipes that open stronger gameplay options."
+      },
+      {
+        "title": "Trade and Collaborate",
+        "body": "Work with other players, sell output, and build community-driven goals."
+      },
+      {
+        "title": "Join Events and Story Arcs",
+        "body": "Use live events and social challenges to keep progression meaningful."
+      }
+    ]
+  },
+  "worldBuilders": {
+    "title": "For World Builders",
+    "description": "Give your region a configurable economic and roleplay backbone.",
+    "hero": {
+      "eyebrow": "For Sim Owners and Builders",
+      "headline": "Design the Experience, Not Just the Map",
+      "body": "SL Colonies gives world builders a toolkit for progression loops, regional identity, and community retention without forcing one rigid formula.",
+      "image": "/images/World-Builders.png",
+      "imageAlt": "World builders configuration"
+    },
+    "benefits": [
+      {
+        "title": "Configurable Progression",
+        "body": "Balance scarcity, output, and pacing to fit your world's narrative and audience."
+      },
+      {
+        "title": "Retention-Centered Design",
+        "body": "Support long-term goals and social interdependence that keeps residents engaged."
+      },
+      {
+        "title": "Operational Flexibility",
+        "body": "Roll out new recipes, systems, and seasonal arcs without replacing your whole setup."
+      },
+      {
+        "title": "Community-Led Growth",
+        "body": "Enable players to generate stories, markets, and events that strengthen your region brand."
+      }
+    ]
+  },
+  "systems": {
+    "title": "Systems",
+    "description": "Explore SL Colonies modules and how they connect into one gameplay fabric.",
+    "hero": {
+      "eyebrow": "System Modules",
+      "headline": "Mix, Match, and Scale",
+      "body": "Use the modules you need now, then expand as your world grows.",
+      "image": "/images/Player-Economy.png",
+      "imageAlt": "SL Colonies systems and economy"
+    }
+  },
+  "community": {
+    "title": "Community",
+    "description": "Player stories, visual showcases, and opportunities to engage.",
+    "hero": {
+      "eyebrow": "Community",
+      "headline": "A Living, Player-Driven Culture",
+      "body": "SL Colonies communities are built by players sharing creations, stories, and social gameplay.",
+      "image": "/images/community-img.png",
+      "imageAlt": "SL Colonies community"
+    }
+  },
+  "news": {
+    "title": "News and Updates",
+    "description": "Recent SL Colonies updates and adjacent Second Life opportunities.",
+    "hero": {
+      "eyebrow": "News",
+      "headline": "Track Updates and Move Fast",
+      "body": "Follow SL Colonies release rhythm and broader Second Life signals relevant to your region strategy.",
+      "image": "/images/About.png",
+      "imageAlt": "SL Colonies news"
+    }
+  },
+  "faq": {
+    "title": "FAQ",
+    "description": "Common questions about onboarding, setup, and running SL Colonies worlds.",
+    "hero": {
+      "eyebrow": "FAQ",
+      "headline": "Answers Before You Commit",
+      "body": "Key setup, operations, and player onboarding details in one place.",
+      "image": "/images/Experience-Thrill.png",
+      "imageAlt": "FAQ and help"
+    }
+  },
+  "getStarted": {
+    "title": "Get Started",
+    "description": "Get live with SL Colonies as a player or world builder.",
+    "hero": {
+      "eyebrow": "Get Started",
+      "headline": "Launch Your SL Colonies Journey",
+      "body": "Choose your path, follow practical setup steps, and get connected with the community.",
+      "image": "/images/Community.png",
+      "imageAlt": "Get started with SL Colonies"
+    }
+  }
+}

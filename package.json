@@ -1,0 +1,10 @@
+{
+  "name": "slcolonies-web-netlify",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && node scripts/serve.mjs"
+  }
+}

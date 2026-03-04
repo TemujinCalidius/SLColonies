@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Gathering Network",
+    "category": "Core",
+    "description": "Resource loops for wood, crops, water, and region-specific materials.",
+    "playerValue": "Clear short-to-mid progression and meaningful daily activity.",
+    "builderValue": "Control scarcity and pacing to match your realm's economy.",
+    "image": "/images/colony.jpg"
+  },
+  {
+    "name": "Crafting Chains",
+    "category": "Core",
+    "description": "Multi-step recipe systems that support specialization and collaboration.",
+    "playerValue": "Long-term goals and stronger identity through professions.",
+    "builderValue": "Enable class-like depth without locking players into one path.",
+    "image": "/images/trades.jpg"
+  },
+  {
+    "name": "Player Economy",
+    "category": "Core",
+    "description": "Trade-ready outputs and market-oriented loops that reward social play.",
+    "playerValue": "Craft, trade, and build value through relationships.",
+    "builderValue": "Generate interdependence that improves retention.",
+    "image": "/images/Player-Economy.png"
+  },
+  {
+    "name": "Region Servers",
+    "category": "Operations",
+    "description": "Infrastructure updates designed to support larger and evolving worlds.",
+    "playerValue": "More stable and consistent progression experience.",
+    "builderValue": "Better reliability as your region scales.",
+    "image": "/images/Farm_001-Bob-Perry.png"
+  },
+  {
+    "name": "Recipe Expansion Pipeline",
+    "category": "Content",
+    "description": "Frequent additions like backpack recipes, potion bottling, and food workflows.",
+    "playerValue": "Fresh goals and renewed reason to return.",
+    "builderValue": "Seasonal content cadence without full-system rewrites.",
+    "image": "/images/Dock_001-Bob-Perry.png"
+  },
+  {
+    "name": "Event-Compatible Design",
+    "category": "Community",
+    "description": "Systems that pair naturally with roleplay arcs, competitions, and social events.",
+    "playerValue": "More social moments and memorable story beats.",
+    "builderValue": "A practical framework for recurring engagement events.",
+    "image": "/images/Village1_001-Bob-Perry.png"
+  }
+]
