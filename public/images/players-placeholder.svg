@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-labelledby="title desc">
+  <title id="title">Players Placeholder</title>
+  <desc id="desc">Replace with players gameplay image</desc>
+  <rect width="900" height="620" fill="#1e2228"/>
+  <rect x="30" y="30" width="840" height="560" rx="20" fill="none" stroke="#cfa72f" stroke-width="3" stroke-dasharray="12 8"/>
+  <text x="450" y="310" text-anchor="middle" fill="#f7f7f7" font-family="Montserrat, Arial, sans-serif" font-size="40" font-weight="700">PLAYERS IMAGE</text>
+</svg>

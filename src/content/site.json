@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "siteName": "SL Colonies",
+    "tagline": "Roleplay Systems for Second Life",
+    "description": "SL Colonies is a flexible roleplay system for Second Life that connects survival, farming, breeding, crafting, and trading for players and world builders.",
+    "baseUrl": "https://www.slcolonies.com"
+  },
+  "navigation": [
+    { "label": "Overview", "href": "#overview" },
+    { "label": "For Players", "href": "#players" },
+    { "label": "For World Builders", "href": "#builders" },
+    { "label": "Economy", "href": "#economy" },
+    { "label": "Team", "href": "#team" },
+    { "label": "More Pages", "href": "/pages/" }
+  ],
+  "hero": {
+    "eyebrow": "Second Life Medieval RPG Systems",
+    "headline": "A Flexible Roleplay Framework for Worlds That Want More",
+    "body": "Immerse yourself in a captivating RPG world that blends survival, farming, breeding, crafting, and trading. SL Colonies is designed for both players and world builders who want depth, progression, and community-driven stories.",
+    "image": "/images/hero-banner-placeholder.svg",
+    "imageAlt": "Hero banner placeholder for SL Colonies",
+    "primaryCta": { "label": "Start Your Journey", "href": "#players" },
+    "secondaryCta": { "label": "Build Your Realm", "href": "#builders" }
+  },
+  "sections": {
+    "overview": {
+      "title": "What Is SL Colonies?",
+      "intro": "SL Colonies is an immersive and dynamic RPG system inside Second Life. It helps regions run compelling progression loops while letting communities shape their own identity.",
+      "points": [
+        {
+          "title": "Connected Gameplay",
+          "text": "Survival, farming, breeding, crafting, and trading are part of one unified loop instead of disconnected mini-systems."
+        },
+        {
+          "title": "Built for Collaboration",
+          "text": "The system rewards interaction between players, encouraging travel, trade, and profession-driven cooperation."
+        },
+        {
+          "title": "Medieval World Fantasy",
+          "text": "Set in a rich medieval setting with room for quests, social economies, and long-form community storytelling."
+        }
+      ]
+    },
+    "players": {
+      "title": "For Players",
+      "intro": "Embark on a medieval adventure where your decisions, alliances, and crafted goods shape your path.",
+      "image": "/images/players-placeholder.svg",
+      "imageAlt": "Players section image placeholder",
+      "list": [
+        "Engage in quests, profession loops, and dynamic progression.",
+        "Forge alliances and join a player-driven economy.",
+        "Master crafting and combat-adjacent systems over time.",
+        "Explore diverse regions and activities with community support."
+      ]
+    },
+    "builders": {
+      "title": "For World Builders",
+      "intro": "SL Colonies gives world builders tools to craft immersive RPG environments and long-term community arcs.",
+      "image": "/images/builders-placeholder.svg",
+      "imageAlt": "World builders section image placeholder",
+      "list": [
+        "Design structures, quest hooks, and progression landscapes.",
+        "Create region-specific identity while using shared system foundations.",
+        "Tune loops to suit your world's pace and social culture.",
+        "Collaborate with a creator-focused community to iterate faster."
+      ]
+    },
+    "economy": {
+      "title": "Dynamic Player-Driven Economy",
+      "intro": "In SL Colonies, alliances are forged, goods are traded, and adventure is tied to economic agency.",
+      "cards": [
+        {
+          "title": "Resource Gathering",
+          "text": "Gather materials that feed crafting and regional trade networks.",
+          "image": "/images/economy-resource-placeholder.svg"
+        },
+        {
+          "title": "Crafting Value",
+          "text": "Convert resources into sought-after items and profession outcomes.",
+          "image": "/images/economy-crafting-placeholder.svg"
+        },
+        {
+          "title": "Trading Networks",
+          "text": "Join merchants, artisans, and traders to unlock broader prosperity loops.",
+          "image": "/images/economy-trade-placeholder.svg"
+        }
+      ]
+    },
+    "team": {
+      "title": "The People Behind SL Colonies",
+      "intro": "SL Colonies is built by passionate creators focused on a groundbreaking roleplay experience.",
+      "members": [
+        {
+          "name": "Temujin Calidius",
+          "role": "Vision Lead",
+          "bio": "Leads SL Colonies with a focus on integrating the best systems and gameplay patterns from across Second Life and beyond."
+        },
+        {
+          "name": "Drakkhis Skaeren",
+          "role": "Lead Developer",
+          "bio": "Drives technical innovation and feature depth to keep SL Colonies evolving for both builders and players."
+        }
+      ]
+    }
+  },
+  "morePages": [
+    {
+      "title": "Systems Docs",
+      "description": "Detailed mechanics, setup guides, and module references.",
+      "status": "Planned"
+    },
+    {
+      "title": "Patch Notes",
+      "description": "Chronological release notes and update breakdowns.",
+      "status": "Planned"
+    },
+    {
+      "title": "Community Stories",
+      "description": "Player highlights, region showcases, and event recaps.",
+      "status": "Planned"
+    },
+    {
+      "title": "Creator Toolkit",
+      "description": "Branding assets, media kit, and partnership resources.",
+      "status": "Planned"
+    }
+  ],
+  "footer": {
+    "note": "SL Colonies is built for Second Life communities that want flexible roleplay systems and lasting player stories.",
+    "links": [
+      { "label": "Original Site", "href": "https://www.slcolonies.com" },
+      { "label": "Forum", "href": "https://forum.slcolonies.com" }
+    ]
+  }
+}
