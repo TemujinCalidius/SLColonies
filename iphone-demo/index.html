@@ -99,7 +99,8 @@ window.addEventListener('resize', resize);
 
 // Game state
 let enemies = [], particles = [], floatingTexts = [], stars = [];
-let score, lives, combo, comboTimer, gameOver, gameStarted, spawnTimer, difficulty;
+let score, lives, combo, lastComboTime, gameOver, gameStarted, difficulty;
+let lastSpawnTime = 0, gameTime = 0;
 let highScore = parseInt(localStorage.getItem('neonSwarmHigh') || '0');
 let shakeAmount = 0;
 
@@ -295,9 +296,10 @@ function explode(x, y, color, count = 20) {
 }
 
 function startGame() {
-  score = 0; lives = 5; combo = 0; comboTimer = 0; gameOver = false; gameStarted = true;
-  spawnTimer = 0; difficulty = 1;
+  score = 0; lives = 5; combo = 0; lastComboTime = 0; gameOver = false; gameStarted = true;
+  difficulty = 1; lastSpawnTime = 0; gameTime = 0;
   enemies = []; particles = []; floatingTexts = [];
+  lastTime = performance.now();
   menu.classList.add('hidden');
   updateUI();
 }
@@ -335,7 +337,7 @@ function handleTap(px, py) {
       if (e.hp <= 0) {
         // Kill!
         combo++;
-        comboTimer = 2;
+        lastComboTime = gameTime;
         const points = 10 * combo;
         score += points;
         explode(e.x, e.y, e.color, 25 + combo * 3);
@@ -357,7 +359,7 @@ function handleTap(px, py) {
   if (!hit) {
     // Missed tap — small penalty
     combo = 0;
-    comboTimer = 0;
+    lastComboTime = 0;
     // Tap ripple
     for (let i = 0; i < 5; i++) particles.push(new Particle(px, py, COLORS[4]));
   }
@@ -405,20 +407,20 @@ function frame(now) {
   ctx.fillRect(0, H - 60, W, 60);
 
   if (gameStarted) {
+    gameTime += dt;
+
     // Spawn logic
     difficulty = 1 + score * 0.0003;
     const spawnRate = Math.max(0.3, 1.5 - score * 0.0005);
-    spawnTimer -= dt;
-    if (spawnTimer <= 0) {
+    if (gameTime - lastSpawnTime >= spawnRate) {
       spawnEnemy();
       if (difficulty > 2 && Math.random() < 0.3) spawnEnemy(); // double spawn
-      spawnTimer = spawnRate;
+      lastSpawnTime = gameTime;
     }
 
-    // Combo decay
-    if (comboTimer > 0) {
-      comboTimer -= dt;
-      if (comboTimer <= 0) { combo = 0; updateUI(); }
+    // Combo decay (2 second window)
+    if (combo > 0 && lastComboTime > 0 && gameTime - lastComboTime > 2) {
+      combo = 0; updateUI();
     }
 
     // Update enemies
@@ -429,7 +431,7 @@ function frame(now) {
         shakeAmount = 8;
         explode(enemies[i].x, H, COLORS[0], 15);
         enemies.splice(i, 1);
-        combo = 0; comboTimer = 0;
+        combo = 0; lastComboTime = 0;
         updateUI();
         if (lives <= 0) { endGame(); break; }
       }
