@@ -408,7 +408,7 @@ function frame(now) {
     // Spawn logic
     difficulty = 1 + score * 0.0003;
     const spawnRate = Math.max(0.3, 1.5 - score * 0.0005);
-    spawnTimer -= dt / 60;
+    spawnTimer -= dt;
     if (spawnTimer <= 0) {
       spawnEnemy();
       if (difficulty > 2 && Math.random() < 0.3) spawnEnemy(); // double spawn
@@ -417,7 +417,7 @@ function frame(now) {
 
     // Combo decay
     if (comboTimer > 0) {
-      comboTimer -= dt / 60;
+      comboTimer -= dt;
       if (comboTimer <= 0) { combo = 0; updateUI(); }
     }
 
