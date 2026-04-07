@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Neon Swarm</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0a0a1a;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+canvas { display: block; width: 100%; height: 100%; }
+#ui {
+  position: fixed; top: 0; left: 0; right: 0;
+  padding: max(env(safe-area-inset-top), 12px) 16px 8px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: -apple-system, system-ui, sans-serif;
+  color: #fff; z-index: 10; pointer-events: none;
+}
+#score { font-size: 28px; font-weight: 700; text-shadow: 0 0 20px rgba(0,200,255,.6); }
+#combo { font-size: 16px; opacity: 0.8; text-shadow: 0 0 10px rgba(255,100,255,.6); }
+#lives { font-size: 22px; letter-spacing: 4px; }
+#menu {
+  position: fixed; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at center, #1a1a3a 0%, #0a0a1a 70%);
+  z-index: 20; gap: 20px; transition: opacity 0.5s;
+}
+#menu.hidden { opacity: 0; pointer-events: none; }
+#menu h1 {
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 42px; font-weight: 800; letter-spacing: 2px;
+  background: linear-gradient(135deg, #00e5ff, #ff00e5, #ffe500);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-shadow: none; margin-bottom: 8px;
+}
+#menu p {
+  font-family: -apple-system, system-ui, sans-serif;
+  color: rgba(255,255,255,0.6); font-size: 15px; max-width: 280px; text-align: center; line-height: 1.5;
+}
+#menu .btn {
+  font-family: -apple-system, system-ui, sans-serif;
+  margin-top: 16px; padding: 16px 48px; border: none; border-radius: 50px;
+  background: linear-gradient(135deg, #00e5ff, #7b2fff);
+  color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 1px;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 0 30px rgba(0,200,255,0.3);
+}
+#menu .final-score {
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 60px; font-weight: 800; color: #fff;
+  text-shadow: 0 0 40px rgba(0,200,255,0.5);
+}
+#menu .label {
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 14px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 3px;
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <div id="score">0</div>
+  <div id="combo"></div>
+  <div id="lives"></div>
+</div>
+<div id="menu">
+  <h1>NEON SWARM</h1>
+  <p>Tap enemies to destroy them. Don't let them reach the bottom. Chain kills for combo multipliers!</p>
+  <button class="btn" id="startBtn">PLAY</button>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+const comboEl = document.getElementById('combo');
+const livesEl = document.getElementById('lives');
+const menu = document.getElementById('menu');
+const startBtn = document.getElementById('startBtn');
+
+let W, H, dpr;
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Game state
+let enemies = [], particles = [], floatingTexts = [], stars = [];
+let score, lives, combo, comboTimer, gameOver, gameStarted, spawnTimer, difficulty;
+let highScore = parseInt(localStorage.getItem('neonSwarmHigh') || '0');
+let shakeAmount = 0;
+
+// Stars background
+for (let i = 0; i < 120; i++) {
+  stars.push({ x: Math.random(), y: Math.random(), s: Math.random() * 1.5 + 0.5, a: Math.random() });
+}
+
+const COLORS = [
+  { h: 0,   name: 'red',    glow: 'rgba(255,60,60,' },
+  { h: 30,  name: 'orange', glow: 'rgba(255,160,30,' },
+  { h: 55,  name: 'yellow', glow: 'rgba(255,230,50,' },
+  { h: 120, name: 'green',  glow: 'rgba(50,255,100,' },
+  { h: 190, name: 'cyan',   glow: 'rgba(0,230,255,' },
+  { h: 260, name: 'purple', glow: 'rgba(160,60,255,' },
+  { h: 310, name: 'pink',   glow: 'rgba(255,60,200,' },
+];
+
+const SHAPES = ['circle', 'triangle', 'diamond', 'hexagon', 'star'];
+
+function drawShape(x, y, r, shape, rotation) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+  ctx.beginPath();
+  switch(shape) {
+    case 'circle':
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      break;
+    case 'triangle':
+      for (let i = 0; i < 3; i++) {
+        const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+      }
+      ctx.closePath();
+      break;
+    case 'diamond':
+      ctx.moveTo(0, -r); ctx.lineTo(r*0.7, 0); ctx.lineTo(0, r); ctx.lineTo(-r*0.7, 0);
+      ctx.closePath();
+      break;
+    case 'hexagon':
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2;
+        i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+      }
+      ctx.closePath();
+      break;
+    case 'star':
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+        const rad = i % 2 === 0 ? r : r * 0.45;
+        i === 0 ? ctx.moveTo(Math.cos(a)*rad, Math.sin(a)*rad) : ctx.lineTo(Math.cos(a)*rad, Math.sin(a)*rad);
+      }
+      ctx.closePath();
+      break;
+  }
+  ctx.restore();
+}
+
+class Enemy {
+  constructor() {
+    this.x = Math.random() * (W - 60) + 30;
+    this.y = -30;
+    this.baseRadius = 18 + Math.random() * 14;
+    this.radius = this.baseRadius;
+    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    this.speed = (0.8 + Math.random() * 0.6) * difficulty;
+    this.wobbleOffset = Math.random() * Math.PI * 2;
+    this.wobbleSpeed = 1 + Math.random() * 2;
+    this.wobbleAmount = 20 + Math.random() * 30;
+    this.rotation = 0;
+    this.rotSpeed = (Math.random() - 0.5) * 0.04;
+    this.pulse = 0;
+    this.hp = this.baseRadius > 26 ? 2 : 1;
+    this.opacity = 1;
+    this.spawned = performance.now();
+  }
+
+  update(dt) {
+    this.y += this.speed * dt * 60;
+    this.x += Math.sin(performance.now() * 0.001 * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmount * 0.02;
+    this.rotation += this.rotSpeed * dt * 60;
+    this.pulse = Math.sin(performance.now() * 0.005) * 0.15;
+    this.radius = this.baseRadius * (1 + this.pulse);
+    return this.y > H + 40;
+  }
+
+  draw() {
+    const hsl = `hsl(${this.color.h}, 90%, 60%)`;
+    const hslLight = `hsl(${this.color.h}, 100%, 75%)`;
+
+    // Outer glow
+    ctx.shadowColor = hsl;
+    ctx.shadowBlur = 25;
+    ctx.strokeStyle = hsl;
+    ctx.lineWidth = 2.5;
+    drawShape(this.x, this.y, this.radius, this.shape, this.rotation);
+    ctx.stroke();
+
+    // Inner fill
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = this.color.glow + '0.15)';
+    drawShape(this.x, this.y, this.radius, this.shape, this.rotation);
+    ctx.fill();
+
+    // Core
+    ctx.strokeStyle = hslLight;
+    ctx.lineWidth = 1;
+    drawShape(this.x, this.y, this.radius * 0.5, this.shape, this.rotation);
+    ctx.stroke();
+
+    // HP indicator for tough enemies
+    if (this.hp > 1) {
+      ctx.fillStyle = hslLight;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.shadowBlur = 0;
+  }
+
+  hit(tx, ty) {
+    const dx = tx - this.x, dy = ty - this.y;
+    const hitR = this.radius + 12; // generous touch target
+    return dx*dx + dy*dy < hitR*hitR;
+  }
+}
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x; this.y = y;
+    const a = Math.random() * Math.PI * 2;
+    const s = 2 + Math.random() * 6;
+    this.vx = Math.cos(a) * s;
+    this.vy = Math.sin(a) * s;
+    this.life = 1;
+    this.decay = 0.015 + Math.random() * 0.025;
+    this.size = 2 + Math.random() * 3;
+    this.color = color;
+  }
+  update(dt) {
+    this.x += this.vx * dt * 60;
+    this.y += this.vy * dt * 60;
+    this.vy += 0.05 * dt * 60;
+    this.life -= this.decay * dt * 60;
+    return this.life <= 0;
+  }
+  draw() {
+    ctx.globalAlpha = this.life;
+    ctx.shadowColor = `hsl(${this.color.h}, 100%, 70%)`;
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = `hsl(${this.color.h}, 90%, 65%)`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+  }
+}
+
+class FloatingText {
+  constructor(x, y, text, color) {
+    this.x = x; this.y = y; this.text = text; this.color = color;
+    this.life = 1; this.vy = -2;
+  }
+  update(dt) {
+    this.y += this.vy * dt * 60;
+    this.vy *= 0.97;
+    this.life -= 0.02 * dt * 60;
+    return this.life <= 0;
+  }
+  draw() {
+    ctx.globalAlpha = this.life;
+    ctx.font = `bold ${18 + (1-this.life)*8}px -apple-system, system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.shadowColor = `hsl(${this.color.h}, 100%, 70%)`;
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = `hsl(${this.color.h}, 90%, 75%)`;
+    ctx.fillText(this.text, this.x, this.y);
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+  }
+}
+
+function spawnEnemy() {
+  enemies.push(new Enemy());
+}
+
+function explode(x, y, color, count = 20) {
+  for (let i = 0; i < count; i++) particles.push(new Particle(x, y, color));
+}
+
+function startGame() {
+  score = 0; lives = 5; combo = 0; comboTimer = 0; gameOver = false; gameStarted = true;
+  spawnTimer = 0; difficulty = 1;
+  enemies = []; particles = []; floatingTexts = [];
+  menu.classList.add('hidden');
+  updateUI();
+}
+
+function endGame() {
+  gameOver = true; gameStarted = false;
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem('neonSwarmHigh', highScore);
+  }
+  menu.classList.remove('hidden');
+  menu.innerHTML = `
+    <div class="label">GAME OVER</div>
+    <div class="final-score">${score.toLocaleString()}</div>
+    <div class="label" style="margin-top:8px">HIGH SCORE: ${highScore.toLocaleString()}</div>
+    <p style="margin-top:4px">Max combo: x${combo}</p>
+    <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+  `;
+}
+
+function updateUI() {
+  scoreEl.textContent = score.toLocaleString();
+  comboEl.textContent = combo > 1 ? `x${combo} COMBO` : '';
+  livesEl.textContent = '♥'.repeat(Math.max(0, lives));
+}
+
+// Touch/click handling
+function handleTap(px, py) {
+  if (!gameStarted) return;
+  let hit = false;
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    const e = enemies[i];
+    if (e.hit(px, py)) {
+      e.hp--;
+      if (e.hp <= 0) {
+        // Kill!
+        combo++;
+        comboTimer = 2;
+        const points = 10 * combo;
+        score += points;
+        explode(e.x, e.y, e.color, 25 + combo * 3);
+        floatingTexts.push(new FloatingText(e.x, e.y, `+${points}`, e.color));
+        if (combo > 1) {
+          floatingTexts.push(new FloatingText(e.x, e.y + 22, `x${combo}`, COLORS[4]));
+        }
+        enemies.splice(i, 1);
+        shakeAmount = Math.min(combo * 2, 12);
+      } else {
+        // Damaged
+        explode(e.x, e.y, e.color, 8);
+        shakeAmount = 3;
+      }
+      hit = true;
+      break;
+    }
+  }
+  if (!hit) {
+    // Missed tap — small penalty
+    combo = 0;
+    comboTimer = 0;
+    // Tap ripple
+    for (let i = 0; i < 5; i++) particles.push(new Particle(px, py, COLORS[4]));
+  }
+  updateUI();
+}
+
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  for (const t of e.changedTouches) handleTap(t.clientX, t.clientY);
+}, { passive: false });
+canvas.addEventListener('mousedown', (e) => handleTap(e.clientX, e.clientY));
+
+// Main loop
+let lastTime = performance.now();
+function frame(now) {
+  const dt = Math.min((now - lastTime) / 1000 * 60 / 60, 3); // normalize to ~60fps, cap
+  lastTime = now;
+
+  // Clear with subtle trail
+  ctx.fillStyle = 'rgba(10,10,26,0.85)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Screen shake
+  if (shakeAmount > 0) {
+    ctx.save();
+    ctx.translate((Math.random()-0.5)*shakeAmount, (Math.random()-0.5)*shakeAmount);
+    shakeAmount *= 0.85;
+    if (shakeAmount < 0.5) shakeAmount = 0;
+  }
+
+  // Stars
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  for (const s of stars) {
+    const alpha = 0.3 + Math.sin(now * 0.001 + s.a * 10) * 0.2;
+    ctx.globalAlpha = alpha;
+    ctx.fillRect(s.x * W, ((s.y * H + now * s.s * 0.01) % H), s.s, s.s);
+  }
+  ctx.globalAlpha = 1;
+
+  // Bottom danger zone
+  const grad = ctx.createLinearGradient(0, H - 60, 0, H);
+  grad.addColorStop(0, 'rgba(255,0,60,0)');
+  grad.addColorStop(1, 'rgba(255,0,60,0.08)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, H - 60, W, 60);
+
+  if (gameStarted) {
+    // Spawn logic
+    difficulty = 1 + score * 0.0003;
+    const spawnRate = Math.max(0.3, 1.5 - score * 0.0005);
+    spawnTimer -= dt / 60;
+    if (spawnTimer <= 0) {
+      spawnEnemy();
+      if (difficulty > 2 && Math.random() < 0.3) spawnEnemy(); // double spawn
+      spawnTimer = spawnRate;
+    }
+
+    // Combo decay
+    if (comboTimer > 0) {
+      comboTimer -= dt / 60;
+      if (comboTimer <= 0) { combo = 0; updateUI(); }
+    }
+
+    // Update enemies
+    for (let i = enemies.length - 1; i >= 0; i--) {
+      if (enemies[i].update(dt)) {
+        // Reached bottom!
+        lives--;
+        shakeAmount = 8;
+        explode(enemies[i].x, H, COLORS[0], 15);
+        enemies.splice(i, 1);
+        combo = 0; comboTimer = 0;
+        updateUI();
+        if (lives <= 0) { endGame(); break; }
+      }
+    }
+  }
+
+  // Draw enemies
+  for (const e of enemies) e.draw();
+
+  // Update & draw particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    if (particles[i].update(dt)) particles.splice(i, 1);
+    else particles[i].draw();
+  }
+
+  // Update & draw floating text
+  for (let i = floatingTexts.length - 1; i >= 0; i--) {
+    if (floatingTexts[i].update(dt)) floatingTexts.splice(i, 1);
+    else floatingTexts[i].draw();
+  }
+
+  if (shakeAmount > 0) ctx.restore();
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+startBtn.addEventListener('click', startGame);
+</script>
+</body>
+</html>
